@@ -68,7 +68,9 @@ usuarioPromise
     });
   })
   .then(function(resultado) {
-    console.log('resultado', resultado);
+    console.log(`Nome: ${resultado.usuario.nome},
+    Endereço: ${resultado.endereco.rua}, ${resultado.endereco.numero},
+    Telefone: (${resultado.telefone.ddd}) ${resultado.telefone.telefone}`);
   })
   .catch(function(erro) {
     console.error('Deu ruim', erro);
