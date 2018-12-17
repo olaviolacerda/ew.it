@@ -1,30 +1,69 @@
-class NotImplementedException extends Error {
-  constructor() {
-    super("Not Implemented Excepetion")
-  }
-}
+// class NotImplementedException extends Error {
+//   constructor() {
+//     super("Not Implemented Excepetion")
+//   }
+// }
 
+// class ICrud {
+//   create(item) {
+//     throw new NotImplementedException()
+//   }
 
-class MongoDB extends ICrud {
-  constructor() {
-    super()
-  }
+//   read(item) {
+//     throw new NotImplementedException()
+//   }
 
-  create(item) {
-    console.log('O item foi salvo em MongoDB')
-  }
-}
+//   update(id, item) {
+//     throw new NotImplementedException()
+//   }
 
-class Postgres extends ICrud {
-  constructor() {
-    super()
-  }
+//   delete(id) {
+//     throw new NotImplementedException()
+//   }
+// }
 
-  create(item) {
-    console.log('O item foi salvo em Postgres')
-  }
-}
+// class MongoDB extends ICrud {
+//   constructor() {
+//     super()
+//   }
 
+//   create(item) {
+//     console.log('O item foi salvo em MongoDB')
+//   }
+// }
 
-const contextMongo = new ContextStrategy(new MongoDB())
-contextMongo.create()
+// class Postgres extends ICrud {
+//   constructor() {
+//     super()
+//   }
+
+//   create(item) {
+//     console.log('O item foi salvo em Postgres')
+//   }
+// }
+
+// class ContextStrategy {
+//   constructor(strategy) {
+//     this._database = strategy
+//   }
+
+//   create(item) {
+//     return this._database.create(item)
+//   }
+
+//   read(item) {
+//     return this._database.read(item)
+//   }
+
+//   update(id, item) {
+//     return this._database.update(id, item)
+//   }
+
+//   delete(id) {
+//     return this._database.delete(id)
+//   }
+
+// }
+
+// const contextMongo = new ContextStrategy(new MongoDB())
+// contextMongo.create()

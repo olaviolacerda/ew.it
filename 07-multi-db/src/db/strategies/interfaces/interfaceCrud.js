@@ -1,3 +1,9 @@
+class NotImplementedException extends Error {
+  constructor() {
+    super("Not Implemented Excepetion")
+  }
+}
+
 class ICrud {
   create(item) {
     throw new NotImplementedException()
