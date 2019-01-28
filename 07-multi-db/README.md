@@ -30,7 +30,7 @@ docker run \
 
 docker run \
     --name clientmongo \
-    -p 3010:3010 \
+    -p 3000:3000 \
     --link mongodb:mongodb \
     -d \
     mongoclient/mongoclient
