@@ -10,6 +10,14 @@ class HeroRoutes extends BaseRoute {
         return {
             path: '/herois',
             method: 'GET',
+            config: {
+                validate: {
+                    //payload -> body
+                    //headers -> header
+                    //params -> na URL :id
+                    //query -> ?skip=0&limit=10
+                }
+            },
             handler: (request, headers) => {
                 try {
                     const { skip, limit, nome } = request.query
