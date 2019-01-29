@@ -38,8 +38,8 @@ db.herois.find({}, {
 
 //create
 db.herois.insert({
-  nome: 'Flash',
-  poder: 'Velocidade',
+  nome: 'Hulk',
+  poder: 'Força',
   dataNascimento: '1970-09-01'
 })
 
@@ -55,27 +55,27 @@ db.herois.find({
 db.herois.update({
   _id: ObjectId("5c4e75bd348262430475d77f")
 }, {
-  nome: 'Mulher Maravilha'
-})
+    nome: 'Mulher Maravilha'
+  })
 
 
 // atualiza somente o NOME e mantem as demais 
 db.herois.update({
   _id: ObjectId("5c4e76303482624304775e12")
 }, {
-  $set: {
-    nome: 'Lanterna Verde'
-  }
-})
+    $set: {
+      nome: 'Lanterna Verde'
+    }
+  })
 
 // atualiza somente um
 db.herois.update({
   poder: 'Velocidade'
 }, {
-  $set: {
-    poder: 'Super força'
-  }
-})
+    $set: {
+      poder: 'Super força'
+    }
+  })
 
 //delete
 //deleta a base
