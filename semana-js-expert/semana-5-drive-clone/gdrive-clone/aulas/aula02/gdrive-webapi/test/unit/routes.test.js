@@ -1,20 +1,34 @@
-import { describe, test, expect, jest } from '@jest/globals'
+import { beforeEach, describe, test, expect, jest } from '@jest/globals'
 import { StatusCodes } from 'http-status-codes'
+
+import TestUtil from '../_util/testUtil'
+import { logger } from '../../src/logger.js'
 import Routes from '../../src/routes'
+import UploadHandler from '../../src/uploadHandler'
+
 describe('#Routes test suite', () => {
+  beforeEach(() => {
+    jest.spyOn(logger, 'info')
+      .mockImplementation()
+  })
+
+  const request = TestUtil.generateReadableStream([' some file bytes'])
+  const response = TestUtil.generateWritableStream(() => { })
+
   const defaultParams = {
-    request: {
+    request: Object.assign(request, {
       headers: {
         'Content-Type': 'multipart/form-data'
       },
       method: '',
       body: {}
-    },
-    response: {
+    }),
+
+    response: Object.assign(response, {
       setHeader: jest.fn(),
       writeHead: jest.fn(),
       end: jest.fn()
-    },
+    }),
     values: () => Object.values(defaultParams)
   }
 
@@ -32,11 +46,10 @@ describe('#Routes test suite', () => {
   })
 
   describe('#handler', () => {
-
     test('given an inexistent route it should choose default route', async () => {
       const routes = new Routes()
       const params = {
-        ...defaultParams,
+        ...defaultParams
       }
 
       params.request.method = 'inexistent'
@@ -47,7 +60,7 @@ describe('#Routes test suite', () => {
     test('it should set any request with CORS enabled', async () => {
       const routes = new Routes()
       const params = {
-        ...defaultParams,
+        ...defaultParams
       }
 
       params.request.method = 'inexistent'
@@ -58,7 +71,7 @@ describe('#Routes test suite', () => {
     test('given method OPTIONS it should choose options route', async () => {
       const routes = new Routes()
       const params = {
-        ...defaultParams,
+        ...defaultParams
       }
 
       params.request.method = 'OPTIONS'
@@ -70,7 +83,7 @@ describe('#Routes test suite', () => {
     test('given method POST it should choose post route', async () => {
       const routes = new Routes()
       const params = {
-        ...defaultParams,
+        ...defaultParams
       }
 
       jest.spyOn(routes, routes.post.name).mockResolvedValue()
@@ -83,7 +96,7 @@ describe('#Routes test suite', () => {
     test('given method GET it should choose get route', async () => {
       const routes = new Routes()
       const params = {
-        ...defaultParams,
+        ...defaultParams
       }
       jest.spyOn(routes, routes.get.name).mockResolvedValue()
       params.request.method = 'GET'
@@ -94,8 +107,8 @@ describe('#Routes test suite', () => {
   })
 
   describe('#get', () => {
-    test.skip('given method GET it should list all downloaded files', async () => {
-      const routes = new Routes()
+    test('given method GET it should list all downloaded files', async () => {
+      const routes = new Routes('/tmp')
       const params = {
         ...defaultParams
       }
@@ -109,13 +122,42 @@ describe('#Routes test suite', () => {
         }
       ]
 
-      jest.spyOn(route.fileHelper, route.fileHelper.getFilesStatus.name)
+      jest.spyOn(routes.fileHelper, routes.fileHelper.getFilesStatus.name)
         .mockResolvedValue(filesStatusesMock)
 
       params.request.method = 'GET'
       await routes.handler(...params.values())
       expect(params.response.writeHead).toHaveBeenCalledWith(StatusCodes.OK)
       expect(params.response.end).toHaveBeenCalled()
+    })
+  })
+
+  describe('#post', () => {
+    test('it should validate post route workflow', async () => {
+      const routes = new Routes()
+      const params = {
+        ...defaultParams
+      }
+      params.request.method = 'POST'
+      params.request.url = '?socketId=10'
+
+      jest.spyOn(
+        UploadHandler.prototype,
+        UploadHandler.prototype.registerEvents.name
+      ).mockImplementation((headers, onFinish) => {
+        const writable = TestUtil.generateWritableStream(() => { })
+        writable.on('finish', onFinish)
+
+        return writable
+      })
+
+      await routes.handler(...params.values())
+
+      expect(UploadHandler.prototype.registerEvents).toHaveBeenCalled()
+      expect(params.response.writeHead).toHaveBeenCalledWith(StatusCodes.OK)
+
+      const expectedResult = JSON.stringify({ result: 'Files uploaded with success! ' })
+      expect(params.response.end).toHaveBeenCalledWith(expectedResult)
     })
   })
 })

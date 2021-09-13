@@ -6,5 +6,5 @@ const logger = pino({
 })
 
 export {
-  logger,
+  logger
 }

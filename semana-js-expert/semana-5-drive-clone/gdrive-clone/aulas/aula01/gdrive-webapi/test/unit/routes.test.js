@@ -94,7 +94,7 @@ describe('#Routes test suite', () => {
   })
 
   describe('#get', () => {
-    test.skip('given method GET it should list all downloaded files', async () => {
+    test('given method GET it should list all downloaded files', async () => {
       const routes = new Routes()
       const params = {
         ...defaultParams
